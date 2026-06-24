@@ -103,6 +103,7 @@
 | Quản lý dự án           | Jira Kanban                                  | Theo dõi tiến độ và phân công công việc                    |
 
 ## 7. Cấu trúc thư mục 
+```text
 credit-card-fraud-analysis/
 │
 ├── data/
@@ -123,7 +124,7 @@ credit-card-fraud-analysis/
 ├── requirements.txt
 ├── README.md
 └── .gitignore
-
+```
 ## 8. Sản phẩm đầu ra
 - File mã nguồn Quarto (report.qmd)
 - File PDF tiểu luận hoàn chỉnh (report.pdf)
