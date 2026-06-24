@@ -86,52 +86,6 @@
 - Dự án được triển khai theo pipeline phân tích dữ liệu chuẩn :
 >  Tiền xử lý dữ liệu (Preprocessing data) -> Phân tích khám phá dữ liệu (EDA) -> Thống kê suy diễn (Statistical Analysis) -> Dashboard tương tác 
 
-#### 1. Tiền xử lý dữ liệu
-
-- Kiểm tra dữ liệu thiếu.
-- Kiểm tra dữ liệu trùng lặp.
-- Phát hiện và xử lý ngoại lai.
-- Chuẩn hóa dữ liệu khi cần thiết.
-- Phân tổ dữ liệu (Binning).
-
-#### 2. Phân tích khám phá dữ liệu (EDA)
-
-- Thống kê mô tả.
-- Phân tích phân phối dữ liệu.
-- Lập bảng tần số.
-- Phân tích tương quan.
-- So sánh giao dịch gian lận và bình thường.
-- Khai thác các biến V1–V28.
-
-#### 3. Thống kê suy diễn (Statistical Analysis)
-
-- Ước lượng trung bình.
-- Ước lượng tỷ lệ giao dịch gian lận.
-- Khoảng tin cậy.
-- Kiểm định t-test.
-- Kiểm định Chi-square (nếu phù hợp).
-
-#### 4. Dashboard tương tác
-
-- Dashboard được xây dựng bằng Python và xuất ra định dạng HTML, cho phép người dùng khám phá dữ liệu một cách trực quan thông qua việc lựa chọn các biến trong bộ dữ liệu.\
-- Người dùng chọn một biến bất kỳ trong dataset, hệ thống sẽ tự động nhận diện kiểu dữ liệu và hiển thị thông tin phù hợp:
-  - Nếu biến là định lượng (Amount, Time, V1–V28):
-    - Mean
-    - Median
-    - Mode
-    - Variance
-    - Standard Deviation
-    - Min
-    - Max
-    - Quartiles
-    - Histogram
-    - Boxplot
-  - Nếu biến là định tính (Class):
-    - Bảng tần số
-    - Bảng tỷ lệ phần trăm
-    - Bar Chart
-    - Pie Chart
-  
 ## 6. Công cụ sử dụng
 
 | Nhóm công cụ            | Công cụ                                      | Mục đích sử dụng                                           |
