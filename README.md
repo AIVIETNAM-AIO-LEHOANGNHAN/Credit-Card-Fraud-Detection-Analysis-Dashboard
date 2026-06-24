@@ -14,7 +14,7 @@
 
 ## 3. Dataset
 - Tên dataset : **Credit Card Fraud Detection** (Nguồn: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
-- Thông tin dữ liệu :
+
 | Thuộc tính | Mô tả |
 |------------|--------|
 | Time | Thời gian giao dịch |
