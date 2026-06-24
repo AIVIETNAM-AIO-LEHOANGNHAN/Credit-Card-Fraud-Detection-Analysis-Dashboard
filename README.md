@@ -13,7 +13,7 @@
 - Xuất báo cáo nghiên cứu dưới dạng PDF.
 
 ## 3. Dataset
-- Tên dataset : **Credit Card Fraud Detection** (Nguồn: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
+- Tên dataset : **Credit Card Fraud Detection** (Nguồn: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud). Bao gồm các thuộc tính như sau : 
 
 | Thuộc tính | Mô tả |
 |------------|--------|
@@ -22,11 +22,71 @@
 | V1–V28 | Các biến đã được ẩn danh bằng PCA |
 | Class | Nhãn giao dịch (0: Bình thường, 1: Gian lận) |
 
-## 4. Pipeline dự án
+## 4. Vai trò của các thành viên
+
+- Nhóm gồm 03 thành viên, làm việc theo mô hình cộng tác trên GitHub và quản lý tiến độ bằng Jira Kanban.
+
+| Thành viên | Vai trò | Nhiệm vụ chính |
+|------------|----------|----------------|
+| **Lê Hoàng Nhân** | Tech Leader và Statistical Analyst | Quản lý tiến độ dự án trên Jira, quản lý GitHub, phân công công việc, review và hợp nhất mã nguồn. Phụ trách phân tích thống kê suy diễn (ước lượng, khoảng tin cậy, kiểm định giả thuyết), tổng hợp kết quả và hoàn thiện báo cáo cuối cùng. |
+| **Nguyễn Quốc Bảo** | Data Analyst | Khảo sát dữ liệu, thực hiện tiền xử lý dữ liệu (kiểm tra dữ liệu thiếu, dữ liệu trùng lặp, ngoại lai), phân tổ dữ liệu và xây dựng các bảng thống kê mô tả, bảng tần số phục vụ phân tích. |
+| **Nguyễn Thị Thu Hiền** | Data Visualization và Dashboard Developer | Thực hiện trực quan hóa dữ liệu, xây dựng các biểu đồ EDA, phân tích mối quan hệ giữa các biến và phát triển Dashboard tương tác HTML cho phép người dùng khám phá dữ liệu. |
+
+### Phân công theo từng giai đoạn 
+
+#### Giai đoạn 1: Khảo sát và Tiền xử lý dữ liệu
+**Phụ trách chính:** Nguyễn Quốc Bảo
+
+**Nhiệm vụ:**
+- Khảo sát bộ dữ liệu.
+- Kiểm tra kiểu dữ liệu và chất lượng dữ liệu.
+- Xử lý dữ liệu thiếu, dữ liệu trùng lặp.
+- Phát hiện và xử lý ngoại lai.
+- Chuẩn bị dữ liệu phục vụ phân tích.
+
+---
+
+#### Giai đoạn 2: Phân tích khám phá dữ liệu (EDA)
+**Phụ trách chính:** Nguyễn Thị Thu Hiền
+
+**Nhiệm vụ:**
+- Thực hiện thống kê mô tả.
+- Xây dựng bảng tần số, Crosstab và Groupby.
+- Trực quan hóa dữ liệu bằng Histogram, Boxplot, Bar Chart, Pie Chart và Heatmap.
+- Phân tích mối quan hệ giữa các biến.
+- Khai thác các biến V1–V28 và tìm kiếm các insight ban đầu.
+
+---
+
+### 🟧 EPIC 3: Phân tích thống kê suy diễn
+**Phụ trách chính:** Lê Hoàng Nhân
+
+**Nhiệm vụ:**
+- Thực hiện ước lượng thống kê.
+- Tính khoảng tin cậy cho trung bình và tỷ lệ.
+- Thực hiện kiểm định t-test.
+- Thực hiện các kiểm định thống kê phù hợp khác (nếu cần).
+- Diễn giải kết quả và rút ra kết luận thống kê.
+
+---
+
+### 🟩 EPIC 4: Xây dựng Dashboard và Hoàn thiện báo cáo
+**Phụ trách chính:** Nguyễn Thị Thu Hiền và Lê Hoàng Nhân
+
+**Nhiệm vụ:**
+- Xây dựng Dashboard tương tác HTML.
+- Thiết kế chức năng phân tích một biến và hai biến.
+- Tích hợp các biểu đồ và bảng thống kê vào Dashboard.
+- Tổng hợp kết quả phân tích vào báo cáo QMD.
+- Render báo cáo PDF.
+- Hoàn thiện README và kiểm tra sản phẩm cuối cùng.
+
+---
+## 5. Pipeline dự án
 - Dự án được triển khai theo pipeline phân tích dữ liệu chuẩn :
 >  Tiền xử lý dữ liệu (Preprocessing data) -> Phân tích khám phá dữ liệu (EDA) -> Thống kê suy diễn (Statistical Analysis) -> Dashboard tương tác 
 
-### 1. Tiền xử lý dữ liệu
+#### 1. Tiền xử lý dữ liệu
 
 - Kiểm tra dữ liệu thiếu.
 - Kiểm tra dữ liệu trùng lặp.
@@ -34,7 +94,7 @@
 - Chuẩn hóa dữ liệu khi cần thiết.
 - Phân tổ dữ liệu (Binning).
 
-### 2. Phân tích khám phá dữ liệu (EDA)
+#### 2. Phân tích khám phá dữ liệu (EDA)
 
 - Thống kê mô tả.
 - Phân tích phân phối dữ liệu.
@@ -43,7 +103,7 @@
 - So sánh giao dịch gian lận và bình thường.
 - Khai thác các biến V1–V28.
 
-### 3. Thống kê suy diễn (Statistical Analysis)
+#### 3. Thống kê suy diễn (Statistical Analysis)
 
 - Ước lượng trung bình.
 - Ước lượng tỷ lệ giao dịch gian lận.
@@ -51,55 +111,66 @@
 - Kiểm định t-test.
 - Kiểm định Chi-square (nếu phù hợp).
 
-### 4. Dashboard tương tác
+#### 4. Dashboard tương tác
 
-Dashboard được xây dựng bằng Python và xuất ra định dạng HTML.
-Các chức năng chính:
-
-#### Phân tích một biến
-- Chọn một biến bất kỳ trong dataset.
-- Nếu biến là định lượng:
-  - Mean
-  - Median
-  - Mode
-  - Variance
-  - Standard Deviation
-  - Min
-  - Max
-  - Quartiles
-  - Histogram
-  - Boxplot
-- Nếu biến là định tính:
-  - Bảng tần số
-  - Bảng tỷ lệ
-  - Bar Chart
-  - Pie Chart
-  - 
-#### Phân tích hai biến
-- Numeric × Numeric → Scatter Plot
-- Numeric × Categorical → Boxplot
-- Categorical × Categorical → Crosstab và Bar Chart
+- Dashboard được xây dựng bằng Python và xuất ra định dạng HTML, cho phép người dùng khám phá dữ liệu một cách trực quan thông qua việc lựa chọn các biến trong bộ dữ liệu.\
+- Người dùng chọn một biến bất kỳ trong dataset, hệ thống sẽ tự động nhận diện kiểu dữ liệu và hiển thị thông tin phù hợp:
+  - Nếu biến là định lượng (Amount, Time, V1–V28):
+    - Mean
+    - Median
+    - Mode
+    - Variance
+    - Standard Deviation
+    - Min
+    - Max
+    - Quartiles
+    - Histogram
+    - Boxplot
+  - Nếu biến là định tính (Class):
+    - Bảng tần số
+    - Bảng tỷ lệ phần trăm
+    - Bar Chart
+    - Pie Chart
   
-## 5. 
+## 6. Công cụ sử dụng
 
+| Nhóm công cụ            | Công cụ                                      | Mục đích sử dụng                                           |
+| ----------------------- | -------------------------------------------- | ---------------------------------------------------------- |
+| Ngôn ngữ lập trình      | Python 3.10                                  | Phát triển toàn bộ hệ thống phân tích dữ liệu và dashboard |
+| Xử lý dữ liệu           | Pandas                                       | Đọc, làm sạch, biến đổi và phân tích dữ liệu               |
+| Tính toán số học        | NumPy                                        | Hỗ trợ tính toán ma trận và các phép toán số học           |
+| Thống kê                | SciPy                                        | Thực hiện ước lượng và kiểm định thống kê                  |
+| Trực quan hóa           | Matplotlib                                   | Vẽ các biểu đồ thống kê cơ bản                             |
+| Trực quan hóa tương tác | Plotly                                       | Xây dựng biểu đồ tương tác cho Dashboard                   |
+| Dashboard               | Panel                                        | Xây dựng Dashboard HTML tương tác                          |
+| Báo cáo                 | Quarto (QMD)                                 | Viết báo cáo, tích hợp mã nguồn và kết quả phân tích       |
+| Đầu ra báo cáo          | PDF                                          | Nộp báo cáo cuối cùng                                      |
+| Quản lý mã nguồn        | GitHub                                       | Lưu trữ mã nguồn và làm việc nhóm                          |
+| Quản lý dự án           | Jira Kanban                                  | Theo dõi tiến độ và phân công công việc                    |
 
-## 6. Cấu trúc thư mục 
-```text
-project/
+## 7. Cấu trúc thư mục 
+credit-card-fraud-analysis/
 │
 ├── data/
-│   ├── raw/
-│   └── processed/
+│   ├── creditcard.csv
+│   └── creditcard_clean.csv
 │
 ├── dashboard/
 │   └── dashboard.py
 │
-├── reports/
+├── report/
 │   ├── report.qmd
+│   └── images/
+│
+├── outputs/
+│   ├── dashboard.html
 │   └── report.pdf
 │
-├── images/
-│
 ├── requirements.txt
-│
-└── README.md
+├── README.md
+└── .gitignore
+
+## 8. Sản phẩm đầu ra
+- File mã nguồn Quarto (report.qmd)
+- File PDF tiểu luận hoàn chỉnh (report.pdf)
+- Dashboard tương tác HTML (dashboard.html)
