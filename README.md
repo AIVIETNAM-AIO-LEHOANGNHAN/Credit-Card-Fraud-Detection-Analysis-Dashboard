@@ -32,7 +32,7 @@
 | **Nguyễn Quốc Bảo** | Data Analyst | Khảo sát dữ liệu, thực hiện tiền xử lý dữ liệu (kiểm tra dữ liệu thiếu, dữ liệu trùng lặp, ngoại lai), phân tổ dữ liệu và xây dựng các bảng thống kê mô tả, bảng tần số phục vụ phân tích. |
 | **Nguyễn Thị Thu Hiền** | Data Visualization và Dashboard Developer | Thực hiện trực quan hóa dữ liệu, xây dựng các biểu đồ EDA, phân tích mối quan hệ giữa các biến và phát triển Dashboard tương tác HTML cho phép người dùng khám phá dữ liệu. |
 
-
+- Dự án được chia làm 4 giai đoạn chính, cụ thể : 
 #### Giai đoạn 1: Khảo sát và Tiền xử lý dữ liệu
 **Phụ trách chính:** Nguyễn Quốc Bảo
 
