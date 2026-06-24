@@ -1,7 +1,7 @@
 # Tên dự án : Credit Card Fraud Detection Analysis
 
 ## 1. Giới thiệu dự án
-- Dự án này thực hiện phân tích dữ liệu giao dịch thẻ tín dụng nhằm phát hiện các mẫu gian lận (fraud detection) dựa trên phương pháp phân tích dữ liệu (Data Analysis), thống kê suy diễn (Inferential Statistics) và trực quan hóa dữ liệu (Data Visualization).
+- Dự án này thực hiện phân tích dữ liệu giao dịch thẻ tín dụng nhằm phát hiện các mẫu gian lận (fraud detection) dựa trên phương pháp phân tích dữ liệu (Data Analysis), thống kê suy diễn (Inferential Statistics).
 - Dataset sử dụng là bộ dữ liệu **Credit Card Fraud Detection**, bao gồm hơn 284,000 giao dịch với 31 đặc trưng, trong đó các biến V1–V28 đã được ẩn danh nhằm bảo mật thông tin người dùng.
 
 ## 2. Mục tiêu của dự án
