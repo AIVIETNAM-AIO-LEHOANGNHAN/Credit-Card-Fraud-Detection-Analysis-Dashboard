@@ -58,7 +58,7 @@
 
 ---
 
-### 🟧 EPIC 3: Phân tích thống kê suy diễn
+### Giai đoạn 3: Phân tích thống kê suy diễn
 **Phụ trách chính:** Lê Hoàng Nhân
 
 **Nhiệm vụ:**
@@ -70,12 +70,12 @@
 
 ---
 
-### 🟩 EPIC 4: Xây dựng Dashboard và Hoàn thiện báo cáo
+### Giai đoạn 4: Xây dựng Dashboard và Hoàn thiện báo cáo
 **Phụ trách chính:** Nguyễn Thị Thu Hiền và Lê Hoàng Nhân
 
 **Nhiệm vụ:**
 - Xây dựng Dashboard tương tác HTML.
-- Thiết kế chức năng phân tích một biến và hai biến.
+- Thiết kế chức năng phân tích một biến.
 - Tích hợp các biểu đồ và bảng thống kê vào Dashboard.
 - Tổng hợp kết quả phân tích vào báo cáo QMD.
 - Render báo cáo PDF.
