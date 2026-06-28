@@ -32,58 +32,7 @@
 | **Nguyễn Quốc Bảo** | Data Analyst | Khảo sát dữ liệu, thực hiện tiền xử lý dữ liệu (kiểm tra dữ liệu thiếu, dữ liệu trùng lặp, ngoại lai), phân tổ dữ liệu và xây dựng các bảng thống kê mô tả, bảng tần số phục vụ phân tích. |
 | **Nguyễn Thị Thu Hiền** | Data Visualization và Dashboard Developer | Thực hiện trực quan hóa dữ liệu, xây dựng các biểu đồ EDA, phân tích mối quan hệ giữa các biến và phát triển Dashboard tương tác HTML cho phép người dùng khám phá dữ liệu. |
 
-- Dự án được chia làm 4 giai đoạn chính, cụ thể : 
-#### Giai đoạn 1: Khảo sát và Tiền xử lý dữ liệu
-**Phụ trách chính:** Nguyễn Quốc Bảo
 
-**Nhiệm vụ:**
-- Khảo sát bộ dữ liệu.
-- Kiểm tra kiểu dữ liệu và chất lượng dữ liệu.
-- Xử lý dữ liệu thiếu, dữ liệu trùng lặp.
-- Phát hiện và xử lý ngoại lai.
-- Chuẩn bị dữ liệu phục vụ phân tích.
-
----
-
-#### Giai đoạn 2: Phân tích khám phá dữ liệu (EDA)
-**Phụ trách chính:** Nguyễn Thị Thu Hiền
-
-**Nhiệm vụ:**
-- Thực hiện thống kê mô tả.
-- Xây dựng bảng tần số, Crosstab và Groupby.
-- Trực quan hóa dữ liệu bằng Histogram, Boxplot, Bar Chart, Pie Chart và Heatmap.
-- Phân tích mối quan hệ giữa các biến.
-- Khai thác các biến V1–V28 và tìm kiếm các insight ban đầu.
-
----
-
-#### Giai đoạn 3: Phân tích thống kê suy diễn
-**Phụ trách chính:** Lê Hoàng Nhân
-
-**Nhiệm vụ:**
-- Thực hiện ước lượng thống kê.
-- Tính khoảng tin cậy cho trung bình và tỷ lệ.
-- Thực hiện kiểm định t-test.
-- Thực hiện các kiểm định thống kê phù hợp khác (nếu cần).
-- Diễn giải kết quả và rút ra kết luận thống kê.
-
----
-
-#### Giai đoạn 4: Xây dựng Dashboard và Hoàn thiện báo cáo
-**Phụ trách chính:** Nguyễn Thị Thu Hiền và Lê Hoàng Nhân
-
-**Nhiệm vụ:**
-- Xây dựng Dashboard tương tác HTML.
-- Thiết kế chức năng phân tích một biến.
-- Tích hợp các biểu đồ và bảng thống kê vào Dashboard.
-- Tổng hợp kết quả phân tích vào báo cáo QMD.
-- Render báo cáo PDF.
-- Hoàn thiện README và kiểm tra sản phẩm cuối cùng.
-
----
-## 5. Pipeline dự án
-- Dự án được triển khai theo pipeline phân tích dữ liệu chuẩn :
->  Tiền xử lý dữ liệu (Preprocessing data) -> Phân tích khám phá dữ liệu (EDA) -> Thống kê suy diễn (Statistical Analysis) -> Dashboard tương tác 
 
 ## 6. Công cụ sử dụng
 
@@ -106,25 +55,64 @@
 credit-card-fraud-analysis/
 │
 ├── data/
-│   ├── creditcard.csv
-│   └── creditcard_clean.csv
+│   ├── raw/                  # Dữ liệu gốc (không commit - xem .gitignore)
+│   └── processed/            # Dữ liệu đã tiền xử lý
 │
-├── dashboard/
-│   └── dashboard.py
+├── notebooks/
+│   ├── 01_preprocessing.qmd  # Chương 2: Tiền xử lý
+│   ├── 02_eda.qmd            # Chương 3-4: Thống kê & Trực quan hóa
+│   └── 03_inference.qmd      # Chương 5: Thống kê suy diễn
 │
 ├── report/
-│   ├── report.qmd
-│   └── images/
+│   └── final_report.qmd      # Báo cáo tổng hợp hoàn chỉnh
 │
-├── outputs/
-│   ├── dashboard.html
-│   └── report.pdf
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
+├── figures/                  # Biểu đồ xuất ra
+├── .gitignore
+├── requirements.txt          # Các thư viện Python cần thiết
+└── README.md
 ```
-## 8. Sản phẩm đầu ra
+## 8. Hướng dẫn chạy dự án
+
+1. Clone repository
+```bash
+git clone https://github.com/<your-username>/credit-card-fraud-analysis.git
+cd credit-card-fraud-analysis
+```
+2. Cài đặt thư viện
+```bash
+pip install -r requirements.txt
+```
+3. Tải dữ liệu
+```bash
+Tải file creditcard.csv từ Kaggle và đặt vào:
+
+data/raw/creditcard.csv
+```
+4. Render báo cáo
+```bash
+quarto render report/final_report.qmd
+```
+
+## 9. Quy trình làm việc với Git
+
+##### Tạo nhánh mới cho từng chương
+git checkout -b feature/chuong-2-preprocessing
+
+##### Commit thường xuyên với message rõ ràng
+git commit -m "feat: xử lý missing values và outliers trong Amount"
+
+##### Push và tạo Pull Request để thành viên khác review
+git push origin feature/chuong-2-preprocessing
+
+**Quy ước đặt tên nhánh:**
+```text
+feature/chuong-X-ten-nhanh — Nhánh phát triển chương mới
+
+fix/ten-loi — Nhánh sửa lỗi
+
+docs/ten-tai-lieu — Nhánh cập nhật tài liệu
+```
+## 10. Sản phẩm đầu ra
 - File mã nguồn Quarto (report.qmd)
 - File PDF tiểu luận hoàn chỉnh (report.pdf)
 - Dashboard tương tác HTML (dashboard.html)
