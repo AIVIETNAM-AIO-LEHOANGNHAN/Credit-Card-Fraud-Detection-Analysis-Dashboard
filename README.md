@@ -83,11 +83,11 @@ cd credit-card-fraud-analysis
 pip install -r requirements.txt
 ```
 3. Tải dữ liệu
-
+```bash
 Tải file creditcard.csv từ Kaggle và đặt vào:
 
 data/raw/creditcard.csv
-
+```
 4. Render báo cáo
 ```bash
 quarto render report/final_report.qmd
@@ -105,11 +105,13 @@ git commit -m "feat: xử lý missing values và outliers trong Amount"
 git push origin feature/chuong-2-preprocessing
 
 **Quy ước đặt tên nhánh:**
-
+```text
 feature/chuong-X-ten-nhanh — Nhánh phát triển chương mới
-fix/ten-loi — Nhánh sửa lỗi
-docs/ten-tai-lieu — Nhánh cập nhật tài liệu
 
+fix/ten-loi — Nhánh sửa lỗi
+
+docs/ten-tai-lieu — Nhánh cập nhật tài liệu
+```
 ## 10. Sản phẩm đầu ra
 - File mã nguồn Quarto (report.qmd)
 - File PDF tiểu luận hoàn chỉnh (report.pdf)
