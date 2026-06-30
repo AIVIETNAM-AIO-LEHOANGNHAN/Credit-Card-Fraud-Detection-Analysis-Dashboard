@@ -11,3 +11,6 @@ __pycache__/
 
 # Output
 outputs/
+
+# Dataset
+data/raw data/creditcard.csv
