@@ -1,0 +1,21 @@
+# Virtual Environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Output
+outputs/
+
+# Dataset
+notebooks/data/raw/creditcard.csv
+
+# Quarto
+*.html
+*_files/
+*.quarto_ipynb*
