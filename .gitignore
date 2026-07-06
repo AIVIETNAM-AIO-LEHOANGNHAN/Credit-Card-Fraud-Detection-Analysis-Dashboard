@@ -13,4 +13,9 @@ __pycache__/
 outputs/
 
 # Dataset
-data/raw data/creditcard.csv
+notebooks/data/raw/creditcard.csv
+
+# Quarto
+*.html
+*_files/
+*.quarto_ipynb*
