@@ -1,0 +1,351 @@
+# 5. Thống kê mô tả và phân tổ Amount
+
+## 5.1. Đọc dữ liệu đã xử lý
+
+``` {python}
+#| echo: false
+#| warning: false
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+df = pd.read_csv('creditcard_clean.csv')
+print(f"✓ Đã tải: {df.shape[0]:,} dòng × {df.shape[1]} cột")
+``` 
+
+## 5.2. Thống kê mô tả cột Amount
+
+``` {python}
+#| echo: true
+# Thống kê tổng thể
+desc = df['Amount'].describe()
+skewness = df['Amount'].skew()
+kurtosis = df['Amount'].kurtosis()
+print("=== THỐNG KÊ MÔ TẢ CỘT AMOUNT ===")
+print(f"Mean (Trung bình)     : {desc['mean']:>10.2f} USD")
+print(f"Median (Trung vị)     : {desc['50%']:>10.2f} USD")
+print(f"Std (Độ lệch chuẩn)   : {desc['std']:>10.2f} USD")
+print(f"Min                   : {desc['min']:>10.2f} USD")
+print(f"Max                   : {desc['max']:>10.2f} USD")
+print(f"Skewness (Độ lệch)    : {skewness:>10.4f}")
+print(f"Kurtosis              : {kurtosis:>10.4f}")
+```
+
+## 5.3. So sánh thống kê theo từng nhóm Class
+
+``` {python}
+#| echo: true
+group_stats = df.groupby('Class')['Amount'].agg([
+    ('Số giao dịch', 'count'),
+    ('Mean (USD)',   lambda x: round(x.mean(), 2)),
+    ('Median (USD)', lambda x: round(x.median(), 2)),
+    ('Std (USD)',    lambda x: round(x.std(), 2)),
+    ('Max (USD)',    lambda x: round(x.max(), 2))
+])
+group_stats.index = ['Bình thường (0)', 'Gian lận (1)']
+print(group_stats.to_string())
+``` 
+
+## 5.4. Phân tổ Amount theo khoảng giá trị
+
+``` {python}
+#| echo: true
+bins   = [0, 50, 200, 500, 2000, 5000, df['Amount'].max()]
+labels = ['0–50', '50–200', '200–500',
+          '500–2K', '2K–5K', '>5K']
+df['Amount_bin'] = pd.cut(df['Amount'],
+                          bins=bins, labels=labels,
+                          include_lowest=True)
+freq_table = df.groupby('Amount_bin', observed=True).agg(
+    Số_giao_dịch=('Amount', 'count'),
+    Tỷ_lệ_pct=('Amount', lambda x: round(len(x)/len(df)*100, 2)),
+    Số_gian_lận=('Class', 'sum'),
+    Tỷ_lệ_gian_lận_pct=('Class',
+                         lambda x: round(x.mean()*100, 4))
+).reset_index()
+print(freq_table.to_string(index=False))
+```
+
+## 5.5. Viết nhận xét mẫu cho Chương 3
+
+Cột Amount có phân phối lệch phải rất mạnh (Skewness ≈ 5.6) — phần lớn giao dịch có giá trị nhỏ (>50% giao dịch dưới 50 USD), trong khi Mean (~88 USD) cao hơn Median (~22 USD) đáng kể, phản ánh ảnh hưởng của các giao dịch có giá trị lớn. Đáng chú ý: nhóm gian lận (Class=1) có Mean Amount thấp hơn nhóm bình thường, cho thấy kẻ gian lận thường thực hiện nhiều giao dịch nhỏ thay vì một giao dịch lớn — đây là insight quan trọng cần kiểm định thống kê ở Chương 5.
+
+# 6. Groupby theo Class và so sánh nhóm
+
+# 6.1. Groupby Amount theo Class
+
+``` {python}
+#| echo: true
+groupby_class = df.groupby('Class')['Amount'].agg(
+    Số_giao_dịch='count',
+    Tổng_tiền=lambda x: round(x.sum(), 2),
+    Trung_bình=lambda x: round(x.mean(), 2),
+    Trung_vị=lambda x: round(x.median(), 2),
+    Độ_lệch_chuẩn=lambda x: round(x.std(), 2)
+)
+groupby_class.index = ['Bình thường (0)', 'Gian lận (1)']
+print(groupby_class.to_string())
+``` 
+
+## 6.2. Groupby số giao dịch gian lận theo Hour
+
+``` {python}
+#| echo: true
+hourly = df.groupby('Hour').agg(
+    Tổng_GD=('Class', 'count'),
+    GD_Gian_Lận=('Class', 'sum'),
+    Tỷ_lệ_GL_pct=('Class', lambda x: round(x.mean()*100, 4))
+).reset_index()
+# Top 5 giờ có tỷ lệ gian lận cao nhất
+print("TOP 5 GIỜ CÓ TỶ LỆ GIAN LẬN CAO NHẤT:")
+print(hourly.nlargest(5, 'Tỷ_lệ_GL_pct').to_string(index=False))
+```
+
+## 6.3. Groupby Amount theo khoảng phân tổ và Class
+
+``` {python}
+#| echo: true
+# Phân tích khoảng Amount nào có tỷ lệ gian lận cao nhất
+bin_class = df.groupby(
+    ['Amount_bin', 'Class'], observed=True
+).size().unstack(fill_value=0)
+bin_class.columns = ['Bình thường', 'Gian lận']
+bin_class['Tỷ lệ GL (%)'] = (
+    bin_class['Gian lận'] /
+    (bin_class['Bình thường'] + bin_class['Gian lận']) * 100
+).round(4)
+print(bin_class.to_string())
+```
+
+## 6.4. Viết nhận xét và đặt câu hỏi cho Chương 5
+
+Phân tích groupby cho thấy một số insights đáng chú ý:
+(1) Về số tiền: Giao dịch gian lận có Amount trung bình thấp hơn giao dịch bình thường (~122 USD vs ~88 USD tùy dataset), gợi ý rằng kẻ gian lận thực hiện nhiều giao dịch nhỏ để tránh bị phát hiện. → Đây là cơ sở để đặt giả thuyết H1 ở Chương 5.
+(2) Về thời gian: Giao dịch gian lận tập trung cao hơn vào các khung giờ đêm khuya (0h–4h sáng) khi số giao dịch bình thường ít hơn nhưng tỷ lệ gian lận lại cao hơn trung bình.
+(3) Về khoảng Amount: Khoảng 0–50 USD có số lượng giao dịch gian lận nhiều nhất về số tuyệt đối, nhưng khoảng >2000 USD lại có tỷ lệ gian lận cao hơn tương đối.
+
+# 7. Histogram, Boxplot phân phối
+
+## 7.1. Histogram Amount theo Class 
+
+``` {python}
+#| echo: false
+#| fig-cap: "Phân phối Amount theo nhóm Class"
+fraud  = df[df['Class'] == 1]['Amount']
+normal = df[df['Class'] == 0]['Amount']
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+# Subplot 1: Overlay histogram (dùng Amount_log để dễ nhìn)
+axes[0].hist(np.log1p(normal), bins=60, alpha=0.6,
+             color='#378ADD', label='Bình thường (0)', density=True)
+axes[0].hist(np.log1p(fraud),  bins=60, alpha=0.7,
+             color='#E24B4A', label='Gian lận (1)', density=True)
+axes[0].set_xlabel('log(1 + Amount)')
+axes[0].set_ylabel('Mật độ')
+axes[0].set_title('Phân phối Amount (log scale)')
+axes[0].legend()
+# Subplot 2: Histogram Amount gốc chỉ nhóm gian lận (zoom in)
+axes[1].hist(fraud, bins=50, color='#E24B4A',
+             edgecolor='white', linewidth=0.3)
+axes[1].set_xlabel('Số tiền (USD)')
+axes[1].set_ylabel('Tần suất')
+axes[1].set_title('Phân phối Amount — Chỉ nhóm Gian lận')
+axes[1].axvline(fraud.mean(), color='black',
+                linestyle='--', label=f'Mean = {fraud.mean():.0f}')
+axes[1].legend()
+plt.tight_layout()
+plt.show()
+plt.savefig("output/phan_phoi_amount.png", dpi = 300, bbox_inches = "tight")
+```
+
+**Nhận xét:** 
+Biểu đồ trên cho thấy phân phối Amount của nhóm gian lận tập trung ở vùng giá trị thấp hơn so với nhóm bình thường, với phần lớn giao dịch gian lận dưới 200 USD. Điều này củng cố insight từ Chương 3: kẻ gian lận có xu hướng thực hiện nhiều giao dịch nhỏ.
+
+## 7.2. Histogram số giao dịch theo Hour và Class 
+
+``` {python}
+#| echo: false
+#| fig-cap: "Phân phối giao dịch theo giờ trong ngày"
+
+fig, ax = plt.subplots(figsize=(11, 4))
+
+hours_normal = df[df['Class']==0]['Hour']
+hours_fraud  = df[df['Class']==1]['Hour']
+
+ax.hist(hours_normal, bins=24, range=(0,24), alpha=0.5,
+        color='#378ADD', label='Bình thường', density=True)
+ax.hist(hours_fraud,  bins=24, range=(0,24), alpha=0.8,
+        color='#E24B4A', label='Gian lận', density=True)
+ax.set_xlabel('Giờ trong ngày (0–23)')
+ax.set_ylabel('Mật độ')
+ax.set_title('Phân phối giao dịch theo giờ — Bình thường vs Gian lận')
+ax.set_xticks(range(0, 24))
+ax.legend()
+plt.tight_layout()
+plt.show()
+plt.savefig("output/phan_phoi_theo_gio.png", dpi = 300, bbox_inches = "tight")
+```
+
+**Nhận xét:**
+Biểu đồ trên cho thấy giao dịch bình thường tập trung vào ban ngày (8h–22h), trong khi giao dịch gian lận có mật độ tương đối cao hơn vào các giờ đêm khuya (0h–4h). Điều này gợi ý rằng thời điểm giao dịch có thể là một yếu tố phân biệt hữu ích.
+
+## 7.3. Boxplot Amount theo Class 
+
+``` {python}
+#| echo: false
+#| fig-cap: "Boxplot Amount theo nhóm Class"
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+# Boxplot Amount gốc
+df.boxplot(column='Amount', by='Class', ax=axes[0],
+           boxprops=dict(color='#185FA5'),
+           medianprops=dict(color='#E24B4A', linewidth=2))
+axes[0].set_title('Boxplot Amount gốc')
+axes[0].set_xlabel('Class')
+axes[0].set_ylabel('Số tiền (USD)')
+plt.sca(axes[0])
+plt.xticks([1, 2], ['Bình thường (0)', 'Gian lận (1)'])
+
+# Boxplot Amount_log (dễ nhìn hơn)
+df.boxplot(column='Amount_log', by='Class', ax=axes[1],
+           boxprops=dict(color='#185FA5'),
+           medianprops=dict(color='#E24B4A', linewidth=2))
+axes[1].set_title('Boxplot Amount (log scale)')
+axes[1].set_xlabel('Class')
+axes[1].set_ylabel('log(1 + Amount)')
+plt.sca(axes[1])
+plt.xticks([1, 2], ['Bình thường (0)', 'Gian lận (1)'])
+
+plt.suptitle('')
+plt.tight_layout()
+plt.show()
+plt.savefig("output/boxplot_amount.png", dpi = 300, bbox_inches = "tight")
+```
+
+**Nhận xét:**
+Biểu đồ trên xác nhận sự khác biệt về phân phối Amount giữa hai nhóm. Nhóm bình thường có nhiều outlier hơn (giao dịch lớn), trong khi nhóm gian lận có IQR tập trung hơn ở vùng giá trị thấp. Sự khác biệt về trung vị này sẽ được kiểm định chính thức bằng t-test ở Chương 5.
+
+## 7.4. Boxplot top 5 biến V theo Class 
+
+``` {python}
+#| echo: false
+#| fig-cap: "Boxplot top 5 biến V có phân phối khác biệt nhất"
+
+# Tính sự khác biệt mean giữa 2 nhóm cho từng biến V
+v_cols = [f'V{i}' for i in range(1, 29)]
+diff = abs(df[df['Class']==1][v_cols].mean() -
+           df[df['Class']==0][v_cols].mean())
+top5_v = diff.nlargest(5).index.tolist()
+print("Top 5 biến V khác biệt nhất:", top5_v)
+
+fig, axes = plt.subplots(1, 5, figsize=(14, 4))
+colors = {0: '#378ADD', 1: '#E24B4A'}
+
+for ax, col in zip(axes, top5_v):
+    data = [df[df['Class']==0][col], df[df['Class']==1][col]]
+    bp = ax.boxplot(data, patch_artist=True,
+                    boxprops=dict(alpha=0.7))
+    bp['boxes'][0].set_facecolor('#378ADD')
+    bp['boxes'][1].set_facecolor('#E24B4A')
+    ax.set_title(col, fontsize=11)
+    ax.set_xticklabels(['Normal', 'Fraud'], fontsize=9)
+
+plt.suptitle('Boxplot Top 5 biến V — Normal vs Fraud',
+             fontsize=12, fontweight='bold')
+plt.tight_layout()
+plt.show()
+plt.savefig("output/boxplot_top5_bien_v.png", dpi = 300, bbox_inches = "tight")
+```
+
+**Nhận xét:** 
+Biểu đồ trên cho thấy top 5 biến V có sự phân tách rõ rệt nhất giữa hai nhóm Class. Đây là các biến có tiềm năng phân biệt gian lận cao nhất và sẽ được xem xét trong phân tích tương quan ở Task 8.
+
+# 8. Heatmap tương quan và biểu đồ Time
+
+## 8.1. Tính ma trận tương quan và xếp hạng
+
+``` {python}
+#| echo: true
+# Tính tương quan với Class — chọn các cột số
+num_cols = [f'V{i}' for i in range(1, 29)] + ['Amount', 'Hour']
+corr_with_class = df[num_cols + ['Class']].corr()['Class'].drop('Class')
+print("TOP 10 BIẾN TƯƠNG QUAN MẠNH NHẤT VỚI CLASS:")
+print(corr_with_class.abs().nlargest(10).round(4).to_string())
+```
+
+## 8.2. Heatmap tương quan 
+
+``` {python}
+#| echo: false
+#| fig-cap: "Heatmap tương quan các biến với Class"
+# Lấy top 15 biến tương quan mạnh nhất để heatmap gọn
+top15 = corr_with_class.abs().nlargest(15).index.tolist()
+corr_matrix = df[top15 + ['Class']].corr()
+fig, ax = plt.subplots(figsize=(12, 9))
+mask = np.zeros_like(corr_matrix, dtype=bool)
+mask[np.triu_indices_from(mask)] = True  # Ẩn tam giác trên
+sns.heatmap(corr_matrix,
+            mask=mask,
+            annot=True, fmt='.2f',
+            cmap='RdBu_r', center=0,
+            vmin=-1, vmax=1,
+            linewidths=0.3,
+            ax=ax,
+            annot_kws={'size': 8})
+ax.set_title('Ma trận tương quan — Top 15 biến vs Class',
+             fontsize=13, fontweight='bold', pad=12)
+plt.tight_layout()
+plt.show()
+plt.savefig("output/heatmap_tuong_quan.png", dpi = 300, bbox_inches = "tight")
+```
+
+**Nhận xét:**
+Biểu đồ trên cho thấy một số biến V có tương quan đáng kể với Class. Các biến có tương quan âm mạnh (V17, V14, V12...) gợi ý rằng giao dịch gian lận có giá trị thấp hơn ở các chiều PCA này, trong khi
+các biến có tương quan dương (V11, V4...) cho xu hướng ngược lại. Cột Amount có tương quan tương đối yếu với Class, điều này phù hợp với quan sát từ Chương 3 rằng gian lận xảy ra ở nhiều mức giá khác nhau.
+
+## 8.3. Bar chart giao dịch gian lận theo Hour (Hình 4.6)
+
+``` {python}
+#| echo: false
+#| fig-cap: "Hình 4.6 — Số giao dịch gian lận theo giờ trong ngày"
+hourly_fraud = df[df['Class']==1].groupby('Hour').size()
+hourly_total = df.groupby('Hour').size()
+hourly_rate  = (hourly_fraud / hourly_total * 100).fillna(0)
+fig, axes = plt.subplots(2, 1, figsize=(12, 7))
+# Subplot 1: Số tuyệt đối
+axes[0].bar(hourly_fraud.index, hourly_fraud.values,
+            color='#E24B4A', alpha=0.8, edgecolor='white')
+axes[0].set_ylabel('Số giao dịch gian lận')
+axes[0].set_title('Số giao dịch gian lận tuyệt đối theo giờ')
+axes[0].set_xticks(range(0, 24))
+# Subplot 2: Tỷ lệ phần trăm
+axes[1].bar(hourly_rate.index, hourly_rate.values,
+            color='#185FA5', alpha=0.8, edgecolor='white')
+axes[1].set_xlabel('Giờ trong ngày (0–23)')
+axes[1].set_ylabel('Tỷ lệ gian lận (%)')
+axes[1].set_title('Tỷ lệ gian lận (%) theo giờ')
+axes[1].set_xticks(range(0, 24))
+plt.tight_layout()
+plt.show()
+plt.savefig("output/bar_chart_theo_hour.png", dpi = 300, bbox_inches = "tight")
+```
+
+**Nhận xét:**
+Hình 4.6 cho thấy sự khác biệt rõ rệt giữa số lượng tuyệt đối và tỷ lệ tương đối. Về số tuyệt đối, gian lận nhiều hơn vào ban ngày (vì tổng giao dịch ban ngày cũng nhiều hơn). Tuy nhiên về tỷ lệ, các giờ đêm khuya (0h–3h) có tỷ lệ gian lận trên tổng giao dịch cao hơn đáng kể — đây là insight quan trọng cho hệ thống cảnh báo.
+
+## 8.4. Bàn giao kết quả cho Thành viên 3
+
+``` {python}
+#| echo: true
+# In danh sách top 5 biến để Thành viên 3 dùng ở Chương 5
+top5_for_inference = corr_with_class.abs().nlargest(5)
+print("=== BÀN GIAO CHO THÀNH VIÊN 3 — CHƯƠNG 5 ===")
+print("Top 5 biến tương quan mạnh nhất với Class:")
+print(top5_for_inference.round(4).to_string())
+print()
+print("Gợi ý giả thuyết cho t-test:")
+print("H0: Mean(Amount | Class=0) = Mean(Amount | Class=1)")
+print("H1: Mean(Amount | Class=0) ≠ Mean(Amount | Class=1)")
+print("→ Dùng Welch's t-test vì phương sai 2 nhóm khác nhau")
+``` 
